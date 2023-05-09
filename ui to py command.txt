@@ -1,0 +1,1 @@
+pyuic5 -x home_page_test.ui -o home_page_test.py
