@@ -2,6 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, db, storage
 import random
 from docxtpl import DocxTemplate
+import os
 
 # initialize the Firebase app with your credentials
 cred = credentials.Certificate('automatic-qp-generator-7d88c-firebase-adminsdk-r7dbq-2adaa3c8a5.json')
@@ -13,11 +14,14 @@ firebase_admin.initialize_app(cred, {
 
 current_sem = 'even'
 
-dept = 'CSE'
-year = '3rd year'
-subject = 'Distributed Systems'
-unit = 'Unit-1'
-database_path = f'/test/{dept}/{year}/{current_sem}/{subject}/question_bank/part_a/{unit}'
+dept = 'ECE'
+year = '3rd Year'
+subject = 'Subject 1'
+unit = '1'
+
+# database_path = "/test/ECE/3rd Year/even/Subject 1/question_bank/part_A/Unit-1"
+
+database_path = f'/test/{dept}/{year}/{current_sem}/{subject}/question_bank/part_A/Unit-{unit}'
 
 # get a reference to the database
 ref = db.reference(database_path)
@@ -49,7 +53,7 @@ for key, value in all_questions_dict.items():
 
 no_of_questions = 9
     
-# randomly select 3 questions
+# randomly select questions
 part_a_selected_questions = random.sample(all_questions, no_of_questions)
 
 part_a_context = {}
@@ -83,14 +87,15 @@ total_context = details_context | part_a_context
 doc = DocxTemplate('qp_format.docx')
 doc.render(total_context)
 
-filename = f'ZZZ {subject_code} IAT-{iat_no} Set-{set_no}.docx'
+filename = f'{subject_code} IAT-{iat_no} Set-{set_no}.docx'
 doc.save(filename)
-
 
 bucket = storage.bucket()
 
 # specify file path and upload to storage
 blob = bucket.blob(filename)
 blob.upload_from_filename(filename)
+
+os.rename(filename, os.path.join("C:\\Users\\Admin\\Desktop", filename))
 
 print("Question paper generated successfully!")

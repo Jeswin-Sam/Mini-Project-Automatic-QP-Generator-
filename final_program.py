@@ -1,0 +1,187 @@
+import tkinter as tk
+from tkinter import filedialog
+from tkcalendar import DateEntry
+from datetime import datetime
+
+from upload_function import *
+from generate_function import *
+
+
+def open_upload_page():
+    # Function to open the upload question bank page
+    upload_page = tk.Toplevel(root)
+    upload_page.title("Upload Question Bank")
+    upload_page.state('zoomed')
+
+    # Set the window size and position
+    window_width = 400
+    window_height = 300
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    x = (screen_width - window_width) // 2
+    y = (screen_height - window_height) // 2
+    root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+    # Create the dropdowns for Department, Year, Subject, Unit, Part
+    department_label = tk.Label(upload_page, text="Department")
+    department_label.pack()
+    department_var = tk.StringVar()
+    department_dropdown = tk.OptionMenu(upload_page, department_var, "CSE", "ECE", "EEE", "MECH", "CIVIL")
+    department_dropdown.configure(bg="#ffffff", fg="#000000", font=("Arial", 12), width=15)
+    department_dropdown.pack(pady=5)
+    
+
+    year_label = tk.Label(upload_page, text="Year")
+    year_label.pack()
+    year_var = tk.StringVar()
+    year_dropdown = tk.OptionMenu(upload_page, year_var, "1st Year", "2nd Year", "3rd Year", "4th Year")
+    year_dropdown.configure(bg="#ffffff", fg="#000000", font=("Arial", 12), width=15)
+    year_dropdown.pack(pady=5)
+
+    subject_label = tk.Label(upload_page, text="Subject")
+    subject_label.pack()
+    subject_var = tk.StringVar()
+    subject_dropdown = tk.OptionMenu(upload_page, subject_var, "Subject 1", "Subject 2", "Subject 3")
+    subject_dropdown.configure(bg="#ffffff", fg="#000000", font=("Arial", 12), width=15)
+    subject_dropdown.pack(pady=5)
+
+    unit_label = tk.Label(upload_page, text="Unit")
+    unit_label.pack()
+    unit_var = tk.StringVar()
+    unit_dropdown = tk.OptionMenu(upload_page, unit_var, "1", "2", "3", "4", "5")
+    unit_dropdown.configure(bg="#ffffff", fg="#000000", font=("Arial", 12), width=15)
+    unit_dropdown.pack(pady=5)
+
+    part_label = tk.Label(upload_page, text="Part")
+    part_label.pack()
+    part_var = tk.StringVar()
+    part_dropdown = tk.OptionMenu(upload_page, part_var, "A", "B")
+    part_dropdown.configure(bg="#ffffff", fg="#000000", font=("Arial", 12), width=15)
+    part_dropdown.pack(pady=5)
+    
+    
+    def upload_question_bank():
+        selected_department = department_var.get()
+        selected_year = year_var.get()
+        selected_subject = subject_var.get()
+        selected_unit = unit_var.get()
+        selected_part = part_var.get()
+                
+        upload_questions(selected_department, selected_year, selected_subject, selected_unit, selected_part, file_path)
+   
+
+    # Add the upload file button
+    def browse_file():
+        global file_path
+        file_path = filedialog.askopenfilename(filetypes=[("Excel Files", "*.xlsx")])
+        
+    upload_file_btn = tk.Button(upload_page, text="Upload File", command=browse_file, padx=10, pady=5) 
+    upload_file_btn.pack(pady=10)
+    
+    upload_page.grab_set()
+
+    upload_btn = tk.Button(upload_page, text="Upload", command=upload_question_bank, padx=10, pady=5)
+    upload_btn.pack(pady=10)
+    
+    
+
+def open_generate_page():
+    # Function to open the generate question paper page
+    generate_page = tk.Toplevel(root)
+    generate_page.title("Generate Question Paper")
+    generate_page.state('zoomed')
+    
+    # Set the window size and position
+    window_width = 400
+    window_height = 300
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    x = (screen_width - window_width) // 2
+    y = (screen_height - window_height) // 2
+    root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+    # Create the dropdowns for Department, Year, Subject, Unit, Part
+    department_label = tk.Label(generate_page, text="Department")
+    department_label.pack()
+    department_var = tk.StringVar()
+    department_dropdown = tk.OptionMenu(generate_page, department_var, "CSE", "ECE", "EEE", "MECH", "CIVIL")
+    department_dropdown.configure(bg="#ffffff", fg="#000000", font=("Arial", 12), width=15, relief="solid")
+    department_dropdown.pack(pady=5)
+
+    year_label = tk.Label(generate_page, text="Year")
+    year_label.pack()
+    year_var = tk.StringVar()
+    year_dropdown = tk.OptionMenu(generate_page, year_var, "1st Year", "2nd Year", "3rd Year", "4th Year")
+    year_dropdown.configure(bg="#ffffff", fg="#000000", font=("Arial", 12), width=15, relief="solid")
+    year_dropdown.pack(pady=5)
+
+    subject_label = tk.Label(generate_page, text="Subject")
+    subject_label.pack()
+    subject_var = tk.StringVar()
+    subject_dropdown = tk.OptionMenu(generate_page, subject_var, "Subject 1", "Subject 2", "Subject 3")
+    subject_dropdown.configure(bg="#ffffff", fg="#000000", font=("Arial", 12), width=15, relief="solid")
+    subject_dropdown.pack(pady=5)
+
+    iat_label = tk.Label(generate_page, text="IAT")
+    iat_label.pack()
+    iat_var = tk.StringVar()
+    iat_dropdown = tk.OptionMenu(generate_page, iat_var, "1", "2", "3")
+    iat_dropdown.configure(bg="#ffffff", fg="#000000", font=("Arial", 12), width=15, relief="solid")
+    iat_dropdown.pack(pady=5)
+
+    # Create the date picker
+    date_label = tk.Label(generate_page, text="Date")
+    date_label.pack()
+    date_picker = DateEntry(generate_page, width=12, background='darkblue', foreground='white', font=("Arial", 12), borderwidth=2)
+    date_picker.pack(pady=5)
+
+
+    
+    def generate_question_paper():
+        # Get the selected options from the dropdowns
+        selected_department = department_var.get()
+        selected_year = year_var.get()
+        selected_subject = subject_var.get()
+        selected_iat = iat_var.get()
+        selected_date = date_picker.get()
+        
+        # Parse the selected date string into a datetime object
+        selected_date = datetime.strptime(selected_date, "%m/%d/%y")
+        # Format the date to dd/mm/yyyy
+        selected_date = selected_date.strftime("%d/%m/%Y")
+        
+        generate_and_save_question_paper(selected_department, selected_year, selected_subject, selected_iat, selected_date)
+
+
+    # Add the generate button
+    generate_btn = tk.Button(generate_page, text="Generate", command=generate_question_paper, padx=10, pady=5)
+    generate_btn.configure(bg="#ff0000", fg="#ffffff", font=("Arial", 12), relief="raised")
+    generate_btn.pack(pady=10)
+
+
+# Create the main window
+root = tk.Tk()
+root.title("Automatic Question Paper Generator")
+root.state('zoomed')
+
+# Set the window size and position
+window_width = 400
+window_height = 300
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+x = (screen_width - window_width) // 2
+y = (screen_height - window_height) // 2
+root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+
+# Create the buttons
+upload_btn = tk.Button(root, text="Upload Question Bank", command=open_upload_page, relief=tk.RAISED, bg="#4CAF50", fg="white", font=("Arial", 12), padx=10, pady=5)
+
+generate_btn = tk.Button(root, text="Generate Question Paper", command=open_generate_page, relief=tk.RAISED, bg="#4CAF50", fg="white", font=("Arial", 12),padx=10, pady=5)
+
+# Add the buttons to the window
+upload_btn.pack(pady=10)
+generate_btn.pack(pady=10)
+
+# Run the main window loop
+root.mainloop()
